@@ -328,9 +328,7 @@ export default {
         return 'el-icon-edit'; // 待检测状态对应的图标
       } else if (orderStatus == '3') {
         return 'el-icon-check'; // 待配方状态对应的图标
-      } else if (orderStatus == '4') {
-        return 'el-icon-success'; // 已完成状态对应的图标
-      }
+      } 
       // 其他状态的图标
       return '';
     },
@@ -346,9 +344,7 @@ export default {
         return '提交检测'; // 待配方状态对应的按钮文字
       } else if (orderStatus === '3') {
         return '等待配方'; // 待配方状态对应的按钮文字
-      } else if (orderStatus === '4') {
-        return '查看订单'; // 已完成状态对应的按钮文字
-      }
+      } 
       // 其他状态的按钮文字
       return '';
     },

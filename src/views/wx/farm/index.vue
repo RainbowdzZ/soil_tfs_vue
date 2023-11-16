@@ -9,10 +9,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="收件人" prop="consignee">
+      <el-form-item label="联系人" prop="consignee">
         <el-input
           v-model="queryParams.consignee"
-          placeholder="请输入收件人"
+          placeholder="请输入联系人"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -105,7 +105,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="用户id" align="center" prop="userId" />
-      <el-table-column label="收件人" align="center" prop="consignee" />
+      <el-table-column label="联系人" align="center" prop="consignee" />
       <el-table-column label="手机号" align="center" prop="phone" width="110px"/>
       <el-table-column label="省级名称" align="center" prop="provinceName" />
       <el-table-column label="市级名称" align="center" prop="cityName" />

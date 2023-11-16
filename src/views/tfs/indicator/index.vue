@@ -204,7 +204,7 @@
     <!-- 添加或修改检测指标管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="检测指标名称" prop="indicatorName">
+        <el-form-item  label="检测指标名称" prop="indicatorName">
           <el-input
             v-model="form.indicatorName"
             placeholder="请输入检测指标名称"

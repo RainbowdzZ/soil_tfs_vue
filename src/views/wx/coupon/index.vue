@@ -25,7 +25,8 @@
           v-model="queryParams.issueBeginTime"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          placeholder="请选择开始发放时间">
+          placeholder="请选择开始发放时间"
+          >
         </el-date-picker>
       </el-form-item>
       <el-form-item label="结束发放时间" prop="issueEndTime">

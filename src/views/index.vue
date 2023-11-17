@@ -1,10 +1,10 @@
 <template>
-  <el-row>
+  <el-row v-if="role === 'admin'">
     <el-row
       style="margin-left: 5px; margin-right: 5px; margin-bottom: 0px"
       :gutter="10"
     >
-      <el-col class="card-1" :span="16">
+      <el-col class="card-1" :span="16" >
         <el-card class="box-card" shadow="always">
           <!-- 显示数据的卡片 -->
           <div slot="header" class="clearfix">
@@ -46,7 +46,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col style="margin-top: 10px" :span="8">
+      <el-col style="margin-top: 10px" :span="8" >
         <el-card class="box-card" shadow="always" style="height: 257px">
           <!-- 显示数据的卡片 -->
           <div slot="header" class="clearfix">
@@ -94,6 +94,7 @@
       </el-card>
     </el-col>
   </el-row>
+  
 </template>
 
 <script>
@@ -117,15 +118,22 @@ export default {
       userId: "",
       message: "",
       text: "",
+      role: "",
     };
   },
   created() {
-    this.init();
+
+    this.getUser().then(() => {
+      if (this.role === "admin") {
+        this.init();
+      }
+    });
+    
   },
   mounted() {
     this.updateChart(this.chartData);
     // 在组件加载时执行WebSocket连接
-    this.getUser().then(() => {});
+    
   },
   methods: {
     //初始化首页数据
@@ -268,6 +276,8 @@ export default {
       return Promise.resolve(getUserProfile()).then((response) => {
         this.user = response.data;
         this.userId = this.user.userId;
+        this.role = this.user.roles[0].roleKey;
+        console.log(this.role);
         console.log(this.user.userId);
       });
     },

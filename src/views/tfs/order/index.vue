@@ -36,8 +36,8 @@
         <el-date-picker
           clearable
           v-model="queryParams.orderTime"
-          type="date"
-          value-format="yyyy-MM-dd"
+          type="datetime"
+          value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择订单创建时间"
         >
         </el-date-picker>
@@ -167,7 +167,7 @@
       <el-form :model="form" label-width="120px" class="dynamic-form">
         <!-- 添加订单号 -->
         <el-form-item label="订单号" prop="orderId">
-          <el-input v-model="form.orderId" placeholder="请输入订单号" />
+          <el-input style="width: 192px;" v-model="form.orderId" placeholder="请输入订单号" />
         </el-form-item>
         <!-- 动态生成的表单项 -->
         <el-form-item

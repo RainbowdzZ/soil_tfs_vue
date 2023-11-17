@@ -36,8 +36,8 @@
         <el-date-picker
           clearable
           v-model="queryParams.orderTime"
-          type="date"
-          value-format="yyyy-MM-dd dd:mm:ss"
+          type="datetime"
+          value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择订单创建时间"
         >
         </el-date-picker>

@@ -36,8 +36,8 @@
         <el-date-picker
           clearable
           v-model="queryParams.orderTime"
-          type="date"
-          value-format="yyyy-MM-dd"
+          type="datetime"
+          value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择订单创建时间"
         >
         </el-date-picker>
@@ -167,7 +167,7 @@
       <el-form :model="form" label-width="120px" class="dynamic-form">
         <!-- 添加订单号 -->
         <el-form-item label="订单号" prop="orderId">
-          <el-input v-model="form.orderId" placeholder="请输入订单号" />
+          <el-input style="width: 192px;" v-model="form.orderId" placeholder="请输入订单号" />
         </el-form-item>
         <!-- 动态生成的表单项 -->
         <el-form-item
@@ -233,6 +233,7 @@ import {
   addOrder,
   updateOrder,
   updateOrderStatus,
+  send
 } from '@/api/tfs/order';
 import { listIndicator1 } from '@/api/tfs/indicator';
 import { addCheckup } from '@/api/tfs/checkup';
@@ -367,6 +368,14 @@ export default {
         this.form.orderId = id;
         this.open = true;
         this.title = '添加检测';
+        send().then(() => {
+        // 在请求成功后执行的逻辑，如果需要的话
+        // 例如，你可能想要刷新列表或者显示一个提示消息
+        console.log('Checkup message sent successfully.');
+      }).catch(error => {
+        // 在请求失败后执行的逻辑，如果需要的话
+        console.error('Failed to send checkup message:', error);
+      });
         // 调用相应的方法来修改订单状态为配送完成
       } else if (row.orderStatus === '4') {
         // 执行“确认完成”操作

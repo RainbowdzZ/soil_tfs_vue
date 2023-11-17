@@ -50,17 +50,17 @@
         <el-card class="box-card" shadow="always" style="height: 257px">
           <!-- 显示数据的卡片 -->
           <div slot="header" class="clearfix">
-            <span>WebSocket日志</span>
+            <span>订单提醒日志</span>
           </div>
           <div>
             <div>
               <!-- 文本框 -->
               <el-input type="textarea" :rows="6"  v-model="message" style="resize: none;margin-bottom: 10px;"></el-input>
               <div style="display: flex">
-                <el-button @click="connectWebSocket" type="info" plain
+                <el-button @click="connectWebSocket" type="success" plain
                   >开启订单提醒</el-button
                 >
-                <el-button @click="showCloseConfirm" type="info" plain
+                <el-button @click="showCloseConfirm" type="danger" plain
                   >关闭订单提醒</el-button
                 >
               </div>
@@ -279,7 +279,7 @@ export default {
       if ("WebSocket" in window) {
         // 改成你的地址
         this.socket = new WebSocket(
-          `ws://localhost:8002/imserver/app/${userId}`
+          `ws://localhost:8080/imserver/app/${userId}`
         );
       } else {
         alert("当前浏览器 Not support websocket");
@@ -288,16 +288,16 @@ export default {
 
       // 连接发生错误的回调方法
       this.socket.onerror = () => {
-        this.setMessageInnerHTML("websocket.onerror: WebSocket连接发生错误");
+        this.setMessageInnerHTML("开启订单提醒发生错误");
         // 在连接失败时弹出提示框
-        this.$message.error("WebSocket连接失败");
+        this.$message.error("提醒开启失败");
       };
 
       // 连接成功建立的回调方法
       this.socket.onopen = () => {
-        this.setMessageInnerHTML("websocket.onopen: WebSocket连接成功");
+        this.setMessageInnerHTML("订单提醒开启成功");
         // 在连接成功时弹出提示框
-        this.$message.success("WebSocket连接成功");
+        this.$message.success("提醒开启成功");
       };
 
       // 接收到消息的回调方法
@@ -322,9 +322,9 @@ export default {
 
       // 连接关闭的回调方法
       this.socket.onclose = () => {
-        this.setMessageInnerHTML("websocket.onclose: WebSocket连接关闭");
+        this.setMessageInnerHTML("订单提醒已关闭");
         // 在连接关闭时弹出提示框
-        this.$message.warning("WebSocket连接已关闭");
+        this.$message.warning("提醒已关闭");
       };
 
       // 监听窗口关闭事件
@@ -349,7 +349,7 @@ export default {
       this.message += innerHTML + "\n";
     },
     showCloseConfirm() {
-      this.$confirm("确定要关闭WebSocket连接吗？", "关闭连接", {
+      this.$confirm("确定要关闭订单提醒吗？", "关闭提醒", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

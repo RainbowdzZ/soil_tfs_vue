@@ -36,8 +36,8 @@
         <el-date-picker
           clearable
           v-model="queryParams.orderTime"
-          type="date"
-          value-format="yyyy-MM-dd dd:mm:ss"
+          type="datetime"
+          value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择订单创建时间"
         >
         </el-date-picker>
@@ -54,6 +54,14 @@
           >搜索</el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="connectWebSocket" type="success" plain
+                  >开启订单提醒</el-button
+                >
+                <el-button @click="showCloseConfirm" type="danger" plain
+                  >关闭订单提醒</el-button
+                >
       </el-form-item>
     </el-form>
 
@@ -152,6 +160,7 @@ import {
   updateOrderStatus,
 } from '@/api/tfs/recipe';
 import { expertLook } from '@/api/tfs/recipe';
+import { getUserProfile } from "@/api/system/user.js";
 
 export default {
   name: 'Recipe',
@@ -181,6 +190,12 @@ export default {
       address: '',
       //规模
       scale: '',
+
+      user: {},
+      socket: null,
+      userId: "",
+      message: "",
+      text: "",
 
       //修改为
       //待专家配方的订单的列表
@@ -229,6 +244,10 @@ export default {
   created() {
     this.getList();
     setInterval(this.getList, 60000);
+  },
+  mounted() {
+    // 在组件加载时执行WebSocket连接
+    this.getUser().then(() => {});
   },
   methods: {
     /**
@@ -472,6 +491,90 @@ export default {
         },
         `recipe_${new Date().getTime()}.xlsx`,
       );
+    },
+    getUser() {
+      return Promise.resolve(getUserProfile()).then((response) => {
+        this.user = response.data;
+        this.userId = this.user.userId;
+        console.log(this.user.userId);
+      });
+    },
+    connectWebSocket() {
+      const userId = this.userId;
+      this.message += `客户端 id = ${userId} `;
+
+      // 判断当前浏览器是否支持WebSocket
+      if ("WebSocket" in window) {
+        // 改成你的地址
+        this.socket = new WebSocket(
+          `ws://localhost:8080/imserver/app/${userId}`
+        );
+      } else {
+        alert("当前浏览器 Not support websocket");
+        return;
+      }
+
+      // 连接发生错误的回调方法
+      this.socket.onerror = () => {
+        this.setMessageInnerHTML("开启订单提醒发生错误");
+        // 在连接失败时弹出提示框
+        this.$message.error("提醒开启失败");
+      };
+
+      // 连接成功建立的回调方法
+      this.socket.onopen = () => {
+        this.setMessageInnerHTML("订单提醒开启成功");
+        // 在连接成功时弹出提示框
+        this.$message.success("提醒开启成功");
+      };
+
+      // 接收到消息的回调方法
+      this.socket.onmessage = (event) => {
+        this.setMessageInnerHTML(`websocket.onmessage: ${event.data}`);
+        // 在接收到消息时弹出提示框
+        this.$confirm(`收到消息: ${event.data}`, "新消息", {
+          confirmButtonText: "查看",
+          cancelButtonText: "忽略",
+          type: "info",
+        }); 
+      };
+
+      // 连接关闭的回调方法
+      this.socket.onclose = () => {
+        this.setMessageInnerHTML("订单提醒已关闭");
+        // 在连接关闭时弹出提示框
+        this.$message.warning("提醒已关闭");
+      };
+
+      // 监听窗口关闭事件
+      window.onbeforeunload = () => {
+        this.closeWebSocket();
+      };
+    },
+    closeWebSocket() {
+      this.socket.close();
+      // this.$message.warning("WebSocket连接已关闭");
+    },
+    sendMessage() {
+      const message = this.text;
+      try {
+        this.socket.send(`{"msg":"${message}"}`);
+        this.setMessageInnerHTML(`websocket.send: ${message}`);
+      } catch (err) {
+        console.error(`websocket.send: ${message} 失败`);
+      }
+    },
+    setMessageInnerHTML(innerHTML) {
+      this.message += innerHTML + "\n";
+    },
+    showCloseConfirm() {
+      this.$confirm("确定要关闭订单提醒吗？", "关闭提醒", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.closeWebSocket();
+      });
     },
   },
 };

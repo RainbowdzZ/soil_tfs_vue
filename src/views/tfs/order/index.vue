@@ -60,30 +60,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['tfs:order:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['tfs:order:edit']"
-          >修改</el-button
-        >
-      </el-col>
+    <el-row :gutter="10" class="mb8">   
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -113,7 +90,6 @@
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单号" align="center" prop="id" />
-      <el-table-column label="用户号" align="center" prop="wxUserId" />
       <el-table-column label="土壤号" align="center" prop="soilNumber" />
       <el-table-column label="快递号" align="center" prop="courierNumber" />
       <el-table-column label="配送方式" align="center" prop="shippingType">
@@ -342,7 +318,7 @@ export default {
       if (orderStatus === '1') {
         return '已送达'; // 待送检状态对应的按钮文字
       } else if (orderStatus === '2') {
-        return '提交检测'; // 待配方状态对应的按钮文字
+        return '填写检测单'; // 待配方状态对应的按钮文字
       } else if (orderStatus === '3') {
         return '等待配方'; // 待配方状态对应的按钮文字
       } 

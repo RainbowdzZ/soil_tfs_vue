@@ -38,17 +38,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['wx:lunbotu:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="danger"
           plain
           icon="el-icon-delete"
@@ -73,7 +62,6 @@
 
     <el-table v-loading="loading" :data="lunbotuList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="图片地址" align="center" prop="imgUrl" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.imgUrl" :width="50" :height="50"/>

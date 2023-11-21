@@ -260,6 +260,7 @@
         <el-form-item label="获取方式" prop="obtainWay">
           <el-radio v-model="form.obtainWay" label="1">手动领取</el-radio>
           <el-radio disabled v-model="form.obtainWay" label="2">兑换码</el-radio>
+          <el-radio v-model="form.obtainWay" label="3">主动发放</el-radio>
         </el-form-item>
         <el-form-item label="开始发放时间" prop="issueBeginTime">
           <el-date-picker clearable

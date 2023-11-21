@@ -1,98 +1,109 @@
 <template>
-  <el-row v-if="role === 'admin'">
-    <el-row
-      style="margin-left: 5px; margin-right: 5px; margin-bottom: 0px"
-      :gutter="10"
-    >
-      <el-col class="card-1" :span="16" >
-        <el-card class="box-card" shadow="always">
-          <!-- 显示数据的卡片 -->
-          <div slot="header" class="clearfix">
-            <span>实时交易情况</span>
-          </div>
-          <div>
-            <el-row :gutter="10" type="flex" justify="space-around">
-              <el-col :span="5">
-                <el-card class="card-item" shadow="hover">
-                  <div>
-                    <span class="card-text">今日交易订单数</span>
-                    <span class="card-data">{{
-                      this.orderData.dataCount.orderCount
-                    }}</span>
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :span="5">
-                <el-card class="card-item" shadow="hover">
-                  <div>
-                    <span class="card-text">待检测土壤标本数</span>
-                    <span class="card-data">{{
-                      this.orderData.dataCount.utSoilCount
-                    }}</span>
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :span="5">
-                <el-card class="card-item" shadow="hover">
-                  <div>
-                    <span class="card-text">用户数量</span>
-                    <span class="card-data">{{
-                      this.orderData.dataCount.userCount
-                    }}</span>
-                  </div>
-                </el-card>
-              </el-col>
-            </el-row>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col style="margin-top: 10px" :span="8" >
-        <el-card class="box-card" shadow="always" style="height: 257px">
-          <!-- 显示数据的卡片 -->
-          <div slot="header" class="clearfix">
-            <span>订单提醒日志</span>
-          </div>
-          <div>
+   <el-row>
+    <div v-if="role === 'admin'">
+      <el-row style="margin-left: 5px; margin-right: 5px; margin-bottom: 0px" :gutter="10">
+        <el-col class="card-1" :span="16">
+          <el-card class="box-card" shadow="always">
+            <!-- 显示数据的卡片 -->
+            <div slot="header" class="clearfix">
+              <span>实时交易情况</span>
+            </div>
             <div>
-              <!-- 文本框 -->
-              <el-input type="textarea" :rows="6"  v-model="message" style="resize: none;margin-bottom: 10px;"></el-input>
-              <div style="display: flex">
-                <el-button @click="connectWebSocket" type="success" plain
-                  >开启订单提醒</el-button
-                >
-                <el-button @click="showCloseConfirm" type="danger" plain
-                  >关闭订单提醒</el-button
-                >
+              <el-row :gutter="10" type="flex" justify="space-around">
+                <el-col :span="5">
+                  <el-card class="card-item" shadow="hover">
+                    <div>
+                      <span class="card-text">今日交易订单数</span>
+                      <span class="card-data">{{ this.orderData.dataCount.orderCount }}</span>
+                    </div>
+                  </el-card>
+                </el-col>
+                <el-col :span="5">
+                  <el-card class="card-item" shadow="hover">
+                    <div>
+                      <span class="card-text">待检测土壤标本数</span>
+                      <span class="card-data">{{ this.orderData.dataCount.utSoilCount }}</span>
+                    </div>
+                  </el-card>
+                </el-col>
+                <el-col :span="5">
+                  <el-card class="card-item" shadow="hover">
+                    <div>
+                      <span class="card-text">用户数量</span>
+                      <span class="card-data">{{ this.orderData.dataCount.userCount }}</span>
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col style="margin-top: 10px" :span="8">
+          <el-card class="box-card" shadow="always" style="height: 257px">
+            <!-- 显示数据的卡片 -->
+            <div slot="header" class="clearfix">
+              <span>订单提醒日志</span>
+            </div>
+            <div>
+              <div>
+                <!-- 文本框 -->
+                <el-input
+                  type="textarea"
+                  :rows="6"
+                  v-model="message"
+                  style="resize: none; margin-bottom: 10px"
+                ></el-input>
+                <div style="display: flex">
+                  <el-button @click="connectWebSocket" type="success" plain>开启订单提醒</el-button>
+                  <el-button @click="showCloseConfirm" type="danger" plain>关闭订单提醒</el-button>
+                </div>
               </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <el-col class="card-2" :span="24">
+        <el-card class="box-card filter" :body-style="{ padding: '0px' }">
+          <div style="display: flex; align-items: center">
+            <div><span style="margin-left: 10px">订单量</span></div>
+            <div class="right-box">
+              <el-button @click="changeChartData('week')" type="primary" plain
+                ><span>本周</span></el-button
+              >
+              <el-button @click="changeChartData('month')" type="primary" plain
+                ><span>本月</span></el-button
+              >
+              <el-button @click="changeChartData('year')" type="primary" plain
+                ><span>全年</span></el-button
+              >
             </div>
           </div>
         </el-card>
       </el-col>
-    </el-row>
-
-    <el-col class="card-2" :span="24">
-      <el-card class="box-card filter" :body-style="{ padding: '0px' }">
-        <div style="display: flex; align-items: center">
-          <div><span style="margin-left: 10px">订单量</span></div>
-          <div class="right-box">
-            <el-button @click="changeChartData('week')" type="primary" plain
-              ><span>本周</span></el-button
-            >
-            <el-button @click="changeChartData('month')" type="primary" plain
-              ><span>本月</span></el-button
-            >
-            <el-button @click="changeChartData('year')" type="primary" plain
-              ><span>全年</span></el-button
-            >
+      <el-col class="card-3" :span="24">
+        <el-card class="box-card">
+          <div class="chart" ref="myChart"></div>
+        </el-card>
+      </el-col>
+    </div>
+    <div v-if="role === 'common'">
+    <el-row style="margin-top: 10px; margin-left: 10px; margin-right: 10px">
+      <el-col :span="24">
+        <el-card class="box-card">
+          <div>
+            <h1 style="text-align: center;">欢迎使用测土后台管理系统</h1>
+            <h3 style="text-align: center;">请在专家配方管理模块中根据检测单信息为该土壤书写配方建议</h3>
+            <div style="text-align: center;">
+              <img :src="require('@/assets/images/土壤.jpeg')" alt="Soil Image">
+            </div>            
+            <h5 style="text-align: center;">声明：测土后台管理系统是一款专业服务于土壤检测机构和专家的系统。我们致力于提供高效的土壤检测服务和专业的土壤配方管理，以支持农业和环境领域的可持续发展。</h5>
+            <h6 style="text-align: center;">配方最终解释权归机构所有</h6>
           </div>
-        </div>
-      </el-card>
-    </el-col>
-    <el-col class="card-3" :span="24">
-      <el-card class="box-card">
-        <div class="chart" ref="myChart"></div>
-      </el-card>
-    </el-col>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
   </el-row>
   
 </template>
@@ -122,10 +133,10 @@ export default {
     };
   },
   created() {
-
     this.getUser().then(() => {
       if (this.role === "admin") {
         this.init();
+        this.connectWebSocket();        
       }
     });
     

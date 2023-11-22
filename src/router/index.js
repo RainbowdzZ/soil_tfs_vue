@@ -70,7 +70,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/index'),
         name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'dashboard', affix: true,roles:'admin' }
       }
     ]
   },
@@ -162,6 +162,20 @@ export const dynamicRoutes = [
       }
     ]
   }
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   hidden: true,
+  //   permissions: ['tfs:index:home'],
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/index'),
+  //       name: 'Index',
+  //       meta: { title: '首页', activeMenu: '/index' }
+  //     }
+  //   ]
+  // },
 ]
 
 // 防止连续点击多次路由报错

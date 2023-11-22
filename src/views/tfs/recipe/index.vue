@@ -1,6 +1,13 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      size="small"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="订单号" prop="id">
         <el-input
           v-model="queryParams.id"
@@ -25,43 +32,40 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="订单创建时间" prop="orderTime">
-        <el-date-picker clearable
-                        v-model="queryParams.orderTime"
-                        type="date"
-                        value-format="yyyy-MM-dd dd:mm:ss"
-                        placeholder="请选择订单创建时间">
+      <el-form-item label="订单创建时间" prop="orderTime" label-width="100px">
+        <el-date-picker
+          clearable
+          v-model="queryParams.orderTime"
+          type="datetime"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          placeholder="请选择订单创建时间"
+        >
         </el-date-picker>
       </el-form-item>
       <el-form-item label="订单状态" prop="orderStatus">
         <el-select v-model="queryParams.orderStatus" placeholder="请选择订单状态" clearable>
-          <el-option
-
-            :key="3"
-            :label="'待配方'"
-            :value="3"
-          />
-          <el-option
-
-            :key="4"
-            :label="'已完成'"
-            :value="4"
-          />
+          <el-option :key="3" :label="'待配方'" :value="3" />
+          <el-option :key="4" :label="'已完成'" :value="4" />
         </el-select>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
+          >搜索</el-button
+        >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="connectWebSocket" type="success" plain
+                  >开启订单提醒</el-button
+                >
+                <el-button @click="showCloseConfirm" type="danger" plain
+                  >关闭订单提醒</el-button
+                >
       </el-form-item>
     </el-form>
 
-
-
-
-
-
-<!--    引入订单列表-->
+    <!--    引入订单列表-->
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单号" align="center" prop="id" />
@@ -86,31 +90,14 @@
             :icon="getButtonIcon(scope.row.orderStatus)"
             @click="handleAction(scope.row)"
             v-hasPermi="['tfs:order:edit']"
-          >{{ getButtonText(scope.row.orderStatus) }}</el-button>
-
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['tfs:order:edit']"-->
-<!--          >修改</el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['tfs:order:remove']"-->
-<!--          >删除</el-button>-->
+            >{{ getButtonText(scope.row.orderStatus) }}</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
-
-
-
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -118,23 +105,25 @@
     />
 
     <!-- 添加或修改专家配方对话框 -->
-
     <el-dialog :title="title" :visible.sync="open" width="900px" append-to-body>
-      <el-descriptions title="检测单">
-        <el-descriptions-item v-for="item in checkupList" :label="item.checkupIndicatorName" :key="item.checkupIndicatorId">
-          {{ item.checkupValue }} {{ item.unit }}
-        </el-descriptions-item>
-      </el-descriptions>
+      <el-descriptions title="检测单"></el-descriptions>
+      <el-table :data="checkupList" style="width: 100%;margin-bottom: 10px;" border>
+        <el-table-column label="检测指标名称" prop="checkupIndicatorName"></el-table-column>
+        <el-table-column label="检测值" prop="checkupValue"></el-table-column>
+        <el-table-column label="单位" prop="unit"></el-table-column>
+      </el-table>      
       <el-descriptions title="订单详情">
-        <el-descriptions-item label="图片">
+        <!-- 图片 -->
+        <el-descriptions-item label="采土图片">
           <el-image
             style="width: 100px; height: 100px"
-            :src=soilUrl
-            ></el-image>
+            :src="soilUrl"
+            :preview-src-list="[soilUrl]"
+          ></el-image>
         </el-descriptions-item>
         <el-descriptions-item label="地址">{{ address }}</el-descriptions-item>
         <el-descriptions-item label="种植规模">{{ scale }} 亩</el-descriptions-item>
-        <el-descriptions-item label="种植种类">{{plantCategory}}</el-descriptions-item>
+        <el-descriptions-item label="种植种类">{{ plantCategory }}</el-descriptions-item>
       </el-descriptions>
 
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -162,13 +151,19 @@
 <script>
 // import { listRecipe, getRecipe, delRecipe, addRecipe, updateRecipe } from "@/api/tfs/recipe";
 //修改为订单
-import { listRecipe, getRecipe, delRecipe, addRecipe, updateRecipe,updateOrderStatus } from "@/api/tfs/recipe";
-import {expertLook} from "@/api/tfs/recipe";
-
-
+import {
+  listRecipe,
+  getRecipe,
+  delRecipe,
+  addRecipe,
+  updateRecipe,
+  updateOrderStatus,
+} from '@/api/tfs/recipe';
+import { expertLook } from '@/api/tfs/recipe';
+import { getUserProfile } from "@/api/system/user.js";
 
 export default {
-  name: "Recipe",
+  name: 'Recipe',
   dicts: ['tfs_order_status'],
   // props:['order_id'],
   data() {
@@ -188,31 +183,29 @@ export default {
       // 总条数
       total: 0,
       //图片路径
-      soilUrl:'',
+      soilUrl: '',
       //种植种类
-      plantCategory:'',
+      plantCategory: '',
       //地址
-      address:'',
+      address: '',
       //规模
-      scale:'',
+      scale: '',
 
-
-
+      user: {},
+      socket: null,
+      userId: "",
+      message: "",
+      text: "",
 
       //修改为
       //待专家配方的订单的列表
-      orderList:[],
+      orderList: [],
 
       //检测单
       checkupList: [],
 
-
-
-
-
-
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -235,92 +228,63 @@ export default {
         orderStatus: null,
       },
 
-
-
-
-
       // 表单参数
       form: {
-      //  自动填写id
-        order_id:this.id
+        //  自动填写id
+        order_id: this.id,
       },
       // 表单校验
       rules: {
-        fertilizationAdvice: [
-          { required: true, message: "施肥建议不能为空", trigger: "blur" }
-        ],
-        plantingAdvice: [
-          { required: true, message: "种植建议不能为空", trigger: "blur" }
-        ],
-        summary: [
-          { required: true, message: "总结不能为空", trigger: "blur" }
-        ]
-      }
+        fertilizationAdvice: [{ required: true, message: '施肥建议不能为空', trigger: 'blur' }],
+        plantingAdvice: [{ required: true, message: '种植建议不能为空', trigger: 'blur' }],
+        summary: [{ required: true, message: '总结不能为空', trigger: 'blur' }],
+      },
     };
   },
   created() {
     this.getList();
     setInterval(this.getList, 60000);
   },
+  mounted() {
+    // 在组件加载时执行WebSocket连接
+    this.getUser().then(() => {});
+  },
   methods: {
-
     /**
      * 获取检测表中的检测项
      */
     fetchCheckupList(id) {
       //获取检测单
-      expertLook(id).then(response => {
-        // 处理检测单列表
-        this.checkupList = response.data.tfsCheckupList.map(item => ({
-          checkupIndicatorName: item.checkupIndicatorName,
-          unit: item.unit,
-          checkupIndicatorId: item.id,
-          checkupValue: item.checkupValue
-        }));
+      expertLook(id)
+        .then((response) => {
+          // 处理检测单列表
+          this.checkupList = response.data.tfsCheckupList.map((item) => ({
+            checkupIndicatorName: item.checkupIndicatorName,
+            unit: item.unit,
+            checkupIndicatorId: item.id,
+            checkupValue: item.checkupValue,
+          }));
 
-        // 将订单详情中的其他信息赋值给对应的属性
-        this.soilUrl = this.prependServerAddress(response.data.soilUrl);
-        this.plantCategory = response.data.plantCategory;
-        this.address = response.data.address;
-        this.scale = response.data.scale;
-        console.log(response.data.soilUrl);
-      }).catch(error => {
-        console.error('Error fetching order details:', error);
-      });
+          // 将订单详情中的其他信息赋值给对应的属性
+          this.soilUrl = this.prependServerAddress(response.data.soilUrl);
+          this.plantCategory = response.data.plantCategory;
+          this.address = response.data.address;
+          this.scale = response.data.scale;
+          console.log(response.data.soilUrl, 'message');
+        })
+        .catch((error) => {
+          console.error('Error fetching order details:', error);
+        });
     },
 
     prependServerAddress(relativeUrl) {
-    // 在这个方法中加入服务器地址
-    if (relativeUrl) {
-      return `http://192.168.43.229:8080${relativeUrl}`;
-    }
-    return ''; // 或者其他默认值
-  },
+      // 在这个方法中加入服务器地址
+      if (relativeUrl) {
+        return `http://192.168.43.229:8080${relativeUrl}`;
+      }
+      return ''; // 或者其他默认值
+    },
 
-    // fetchExpertLook(id) {
-    //   expertLook(id).then(response => {
-    //     this.checkupList = response.rows.map(item => ({
-    //       checkupIndicatorName: item.checkupIndicatorName,
-    //       unit: item.unit,
-    //       checkupIndicatorId:item.id,
-    //       checkupValue: item.checkupValue
-    //     }));
-    //   }).catch(error => {
-    //     console.error('Error fetching checkups:', error);
-    //   });
-    // },
-    /**
-     * 通过订单号获得订单详情
-     */
-    // fetchSoilUrl(orderId) {
-    //   getSoilUrl(orderId).then(response => {
-    //     if (response && response.data && response.data.soilUrl) {
-    //       this.url = response.data.soilUrl;
-    //     }
-    //   }).catch(error => {
-    //     console.error('Error fetching soil_url:', error);
-    //   });
-    // },
     /**
      * 通过订单状态 修改按钮样式
      * @param orderStatus
@@ -329,8 +293,7 @@ export default {
     getButtonIcon(orderStatus) {
       if (orderStatus == '3') {
         return 'el-icon-check'; // 待配方状态对应的图标
-      } else if
-        (orderStatus == '4') {
+      } else if (orderStatus == '4') {
         return 'el-icon-success'; // 已完成状态对应的图标
       }
       // 其他状态的图标
@@ -359,33 +322,31 @@ export default {
         // 执行“提交配方”操作
 
         this.reset();
-        const id = row.id || this.ids
+        const id = row.id || this.ids;
         this.fetchCheckupList(id);
         // this.fetchSoilUrl(id);
-        this.form.orderId=id;
-        this.open =true;
+        this.form.orderId = id;
+        this.open = true;
         this.showSubmitButton = true;
-        this.title ="添加专家配方";
+        this.title = '添加专家配方';
         // 调用相应的方法来修改订单状态为配送完成
-
 
         // 调用相应的方法来修改订单状态为已送达
       } else if (row.orderStatus === '4') {
         // 执行“查看配方”操作
         this.reset();
-        const id = row.id || this.ids
+        const id = row.id || this.ids;
         this.fetchCheckupList(id);
         // this.fetchSoilUrl(id);
-        getRecipe(id).then(response => {
+        getRecipe(id).then((response) => {
           //判断是否查得到data（response里是否有data）
           this.form = response.data;
           this.open = true;
           this.showSubmitButton = false;
-          this.title = "修改专家配方";})
-           }
-        },
-
-
+          this.title = '修改专家配方';
+        });
+      }
+    },
 
     // /** 查询专家配方列表 */
     // getList() {
@@ -398,11 +359,10 @@ export default {
     // },
     //引入订单
 
-
     /** 查询待配方订单列表 */
     getList() {
       this.loading = true;
-      listRecipe(this.queryParams).then(response => {
+      listRecipe(this.queryParams).then((response) => {
         this.orderList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -420,9 +380,9 @@ export default {
         orderId: null,
         fertilizationAdvice: null,
         plantingAdvice: null,
-        summary: null
+        summary: null,
       };
-      this.resetForm("form");
+      this.resetForm('form');
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -431,21 +391,21 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
+      this.resetForm('queryForm');
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd(row) {
       this.reset();
-      this.form.orderId=row.id;
-      this.open =true;
-      this.title ="添加专家配方"
+      this.form.orderId = row.id;
+      this.open = true;
+      this.title = '添加专家配方';
     },
     /** 提交配方按钮操作 */
     // handleUpdate(row) {
@@ -460,53 +420,49 @@ export default {
     /**提交配方*/
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id || this.ids;
 
-      getRecipe(id).then(response => {
+      getRecipe(id).then((response) => {
         //判断是否查得到data（response里是否有data）
-        if (response && response.data){
-            this.form = response.data;
-            this.open = true;
-            this.title = "修改专家配方";
-          }
-          else{
-            this.reset();
-            this.form.orderId=id;
-            this.open =true;
-            this.title ="添加专家配方"
+        if (response && response.data) {
+          this.form = response.data;
+          this.open = true;
+          this.title = '修改专家配方';
+        } else {
+          this.reset();
+          this.form.orderId = id;
+          this.open = true;
+          this.title = '添加专家配方';
         }
       });
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateRecipe(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-
-            //  修改订单状态
-              updateOrderStatus(this.form.orderId, '4').then(response => {
-                // 根据返回结果执行相应操作
-                //刷新列表
-                this.getList();
-              });
-
-            });
-          } else {
-            addRecipe(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
+            updateRecipe(this.form).then((response) => {
+              this.$modal.msgSuccess('修改成功');
               this.open = false;
 
               //  修改订单状态
-              updateOrderStatus(this.form.orderId, '4').then(response => {
+              updateOrderStatus(this.form.orderId, '4').then((response) => {
                 // 根据返回结果执行相应操作
                 //刷新列表
                 this.getList();
               });
+            });
+          } else {
+            addRecipe(this.form).then((response) => {
+              this.$modal.msgSuccess('新增成功');
+              this.open = false;
 
-
+              //  修改订单状态
+              updateOrderStatus(this.form.orderId, '4').then((response) => {
+                // 根据返回结果执行相应操作
+                //刷新列表
+                this.getList();
+              });
             });
           }
         }
@@ -515,19 +471,111 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除专家配方编号为"' + ids + '"的数据项？').then(function() {
-        return delRecipe(ids);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      this.$modal
+        .confirm('是否确认删除专家配方编号为"' + ids + '"的数据项？')
+        .then(function () {
+          return delRecipe(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.$modal.msgSuccess('删除成功');
+        })
+        .catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('tfs/recipe/export', {
-        ...this.queryParams
-      }, `recipe_${new Date().getTime()}.xlsx`)
-    }
-  }
+      this.download(
+        'tfs/recipe/export',
+        {
+          ...this.queryParams,
+        },
+        `recipe_${new Date().getTime()}.xlsx`,
+      );
+    },
+    getUser() {
+      return Promise.resolve(getUserProfile()).then((response) => {
+        this.user = response.data;
+        this.userId = this.user.userId;
+        console.log(this.user.userId);
+      });
+    },
+    connectWebSocket() {
+      const userId = this.userId;
+      this.message += `客户端 id = ${userId} `;
+
+      // 判断当前浏览器是否支持WebSocket
+      if ("WebSocket" in window) {
+        // 改成你的地址
+        this.socket = new WebSocket(
+          `ws://localhost:8080/imserver/app/${userId}`
+        );
+      } else {
+        alert("当前浏览器 Not support websocket");
+        return;
+      }
+
+      // 连接发生错误的回调方法
+      this.socket.onerror = () => {
+        this.setMessageInnerHTML("开启订单提醒发生错误");
+        // 在连接失败时弹出提示框
+        this.$message.error("提醒开启失败");
+      };
+
+      // 连接成功建立的回调方法
+      this.socket.onopen = () => {
+        this.setMessageInnerHTML("订单提醒开启成功");
+        // 在连接成功时弹出提示框
+        this.$message.success("提醒开启成功");
+      };
+
+      // 接收到消息的回调方法
+      this.socket.onmessage = (event) => {
+        this.setMessageInnerHTML(`websocket.onmessage: ${event.data}`);
+        // 在接收到消息时弹出提示框
+        this.$confirm(`收到消息: ${event.data}`, "新消息", {
+          confirmButtonText: "查看",
+          cancelButtonText: "忽略",
+          type: "info",
+        }); 
+      };
+
+      // 连接关闭的回调方法
+      this.socket.onclose = () => {
+        this.setMessageInnerHTML("订单提醒已关闭");
+        // 在连接关闭时弹出提示框
+        this.$message.warning("提醒已关闭");
+      };
+
+      // 监听窗口关闭事件
+      window.onbeforeunload = () => {
+        this.closeWebSocket();
+      };
+    },
+    closeWebSocket() {
+      this.socket.close();
+      // this.$message.warning("WebSocket连接已关闭");
+    },
+    sendMessage() {
+      const message = this.text;
+      try {
+        this.socket.send(`{"msg":"${message}"}`);
+        this.setMessageInnerHTML(`websocket.send: ${message}`);
+      } catch (err) {
+        console.error(`websocket.send: ${message} 失败`);
+      }
+    },
+    setMessageInnerHTML(innerHTML) {
+      this.message += innerHTML + "\n";
+    },
+    showCloseConfirm() {
+      this.$confirm("确定要关闭订单提醒吗？", "关闭提醒", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.closeWebSocket();
+      });
+    },
+  },
 };
 </script>

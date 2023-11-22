@@ -53,3 +53,10 @@ export function delOrder(id) {
     method: 'delete'
   })
 }
+
+export function send() {
+  return request({
+    url: '/wx/sendCheckupMessage',
+    method: 'post'
+  })
+}

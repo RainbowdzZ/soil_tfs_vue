@@ -9,12 +9,24 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <!-- <el-form-item label="发放时间">
+        <el-date-picker
+          v-model="issueDateRange"
+          style="width: 240px"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item> -->
       <el-form-item label="开始发放时间" prop="issueBeginTime">
         <el-date-picker clearable
           v-model="queryParams.issueBeginTime"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          placeholder="请选择开始发放时间">
+          placeholder="请选择开始发放时间"
+          >
         </el-date-picker>
       </el-form-item>
       <el-form-item label="结束发放时间" prop="issueEndTime">
@@ -24,7 +36,7 @@
           value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择结束发放时间">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> 
       <el-form-item label="有效期天数" prop="termDays">
         <el-input
           v-model="queryParams.termDays"
@@ -57,13 +69,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="更新人" prop="updater">
-        <el-input
-          v-model="queryParams.updater"
-          placeholder="请输入更新人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="活动状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择活动状态" clearable>
+          <el-option
+            v-for="dict in dict.type.wx_coupon_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -246,6 +260,7 @@
         <el-form-item label="获取方式" prop="obtainWay">
           <el-radio v-model="form.obtainWay" label="1">手动领取</el-radio>
           <el-radio disabled v-model="form.obtainWay" label="2">兑换码</el-radio>
+          <el-radio v-model="form.obtainWay" label="3">主动发放</el-radio>
         </el-form-item>
         <el-form-item label="开始发放时间" prop="issueBeginTime">
           <el-date-picker clearable
@@ -325,6 +340,8 @@ export default {
       total: 0,
       // 优惠券表格数据
       couponList: [],
+
+      issueDateRange: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层

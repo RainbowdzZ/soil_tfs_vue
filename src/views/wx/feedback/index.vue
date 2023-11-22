@@ -50,9 +50,10 @@
 
     <el-table v-loading="loading" :data="feedbackList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="反馈用户id" align="center" prop="userId" />
-      <el-table-column label="反馈内容" align="center" prop="content" />
-      <el-table-column label="手机号" align="center" prop="phone" />
+      <el-table-column label="反馈内容" align="center" prop="content">
+        
+      </el-table-column>
+      <el-table-column label="联系电话" align="center" prop="phone" />
       <el-table-column label="创建时间" align="center" prop="createTime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">

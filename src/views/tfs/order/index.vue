@@ -88,8 +88,10 @@
     </el-row>
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" />      
       <el-table-column label="订单号" align="center" prop="id" />
+      <el-table-column label="联系人" align="center" prop="consignee" />
+      <el-table-column label="联系电话" align="center" prop="phone" />
       <el-table-column label="土壤号" align="center" prop="soilNumber" />
       <el-table-column label="快递号" align="center" prop="courierNumber" />
       <el-table-column label="配送方式" align="center" prop="shippingType">

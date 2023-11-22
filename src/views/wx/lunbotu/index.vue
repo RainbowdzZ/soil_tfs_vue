@@ -38,17 +38,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['wx:lunbotu:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="danger"
           plain
           icon="el-icon-delete"
@@ -73,7 +62,6 @@
 
     <el-table v-loading="loading" :data="lunbotuList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="图片地址" align="center" prop="imgUrl" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.imgUrl" :width="50" :height="50"/>
@@ -225,46 +213,23 @@ export default {
   },
   methods: {
     /** 查询小程序轮播图列表 */
-    // getList() {
-    //   this.loading = true;
-    //   listLunbotu(this.queryParams).then(response => {
-    //     this.lunbotuList = response.rows;
-    //     for (let i = 0; i < this.lunbotuList.length; i++) {
-    //       this.lunbotuList[i].content = this.lunbotuList[i].content.replace(/<\/?p>/g, "");
-    //
-    //     }
-    //     console.log('测试',response.rows,this.lunbotuList)
-    //
-    //     this.total = response.total;
-    //     this.loading = false;
-    //   });
-    // },
     getList() {
       this.loading = true;
       listLunbotu(this.queryParams).then(response => {
         if (response.rows && Array.isArray(response.rows)) {
-          // 遍历数组，为每个元素处理 content 属性
+          // 使用 map 简化代码，处理 content 属性
           this.lunbotuList = response.rows.map(item => {
             // 检查每个元素是否有 content 属性
             if (item && item.content) {
-              // 新建一个对象，避免直接修改原始数据
-              const newItem = { ...item };
-              // 处理 content 属性
-              newItem.content = newItem.content.replace(/<\/?p>/g, "");
-              return newItem;
+              // 使用正则表达式去除 <p> 标签，并在替换后的内容末尾添加空格
+              item.content = item.content.replace(/<\/?p>/g, "") + " ";
             }
-            return item; // 如果没有 content 属性，返回原始元素
+            return item;
           });
         }
-
-        console.log('测试', response.rows, this.lunbotuList);
-
-        this.total = response.total;
         this.loading = false;
       });
     },
-
-
     // 取消按钮
     cancel() {
       this.open = false;

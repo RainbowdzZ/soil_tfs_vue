@@ -54,36 +54,13 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
-          >搜索</el-button
+        >搜索</el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['tfs:order:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['tfs:order:edit']"
-          >修改</el-button
-        >
-      </el-col>
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -93,7 +70,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['tfs:order:remove']"
-          >删除</el-button
+        >删除</el-button
         >
       </el-col>
       <el-col :span="1.5">
@@ -104,7 +81,7 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['tfs:order:export']"
-          >导出</el-button
+        >导出</el-button
         >
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -113,7 +90,8 @@
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单号" align="center" prop="id" />
-      <el-table-column label="用户号" align="center" prop="wxUserId" />
+      <el-table-column label="联系人" align="center" prop="consignee" />
+      <el-table-column label="联系电话" align="center" prop="phone" />
       <el-table-column label="土壤号" align="center" prop="soilNumber" />
       <el-table-column label="快递号" align="center" prop="courierNumber" />
       <el-table-column label="配送方式" align="center" prop="shippingType">
@@ -140,7 +118,7 @@
             :icon="getButtonIcon(scope.row.orderStatus)"
             @click="handleAction(scope.row)"
             v-hasPermi="['tfs:order:edit']"
-            >{{ getButtonText(scope.row.orderStatus) }}</el-button
+          >{{ getButtonText(scope.row.orderStatus) }}</el-button
           >
 
           <el-button
@@ -149,7 +127,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tfs:order:remove']"
-            >删除</el-button
+          >删除</el-button
           >
         </template>
       </el-table-column>
@@ -329,7 +307,7 @@ export default {
         return 'el-icon-edit'; // 待检测状态对应的图标
       } else if (orderStatus == '3') {
         return 'el-icon-check'; // 待配方状态对应的图标
-      } 
+      }
       // 其他状态的图标
       return '';
     },
@@ -342,10 +320,10 @@ export default {
       if (orderStatus === '1') {
         return '已送达'; // 待送检状态对应的按钮文字
       } else if (orderStatus === '2') {
-        return '提交检测'; // 待配方状态对应的按钮文字
+        return '填写检测单'; // 待配方状态对应的按钮文字
       } else if (orderStatus === '3') {
         return '等待配方'; // 待配方状态对应的按钮文字
-      } 
+      }
       // 其他状态的按钮文字
       return '';
     },
@@ -369,13 +347,13 @@ export default {
         this.open = true;
         this.title = '添加检测';
         send().then(() => {
-        // 在请求成功后执行的逻辑，如果需要的话
-        // 例如，你可能想要刷新列表或者显示一个提示消息
-        console.log('Checkup message sent successfully.');
-      }).catch(error => {
-        // 在请求失败后执行的逻辑，如果需要的话
-        console.error('Failed to send checkup message:', error);
-      });
+          // 在请求成功后执行的逻辑，如果需要的话
+          // 例如，你可能想要刷新列表或者显示一个提示消息
+          console.log('Checkup message sent successfully.');
+        }).catch(error => {
+          // 在请求失败后执行的逻辑，如果需要的话
+          console.error('Failed to send checkup message:', error);
+        });
         // 调用相应的方法来修改订单状态为配送完成
       } else if (row.orderStatus === '4') {
         // 执行“确认完成”操作

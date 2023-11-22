@@ -96,7 +96,7 @@
             <h3 style="text-align: center;">请在专家配方管理模块中根据检测单信息为该土壤书写配方建议</h3>
             <div style="text-align: center;">
               <img :src="require('@/assets/images/土壤.jpeg')" alt="Soil Image">
-            </div>            
+            </div>
             <h5 style="text-align: center;">声明：测土后台管理系统是一款专业服务于土壤检测机构和专家的系统。我们致力于提供高效的土壤检测服务和专业的土壤配方管理，以支持农业和环境领域的可持续发展。</h5>
             <h6 style="text-align: center;">配方最终解释权归机构所有</h6>
           </div>
@@ -105,7 +105,7 @@
     </el-row>
   </div>
   </el-row>
-  
+
 </template>
 
 <script>
@@ -137,15 +137,16 @@ export default {
     this.getUser().then(() => {
       if (this.role === "admin") {
         this.init();
-        
+        this.connectWebSocket();
+
       }
     });
-    
+
   },
   mounted() {
     this.updateChart(this.chartData);
     // 在组件加载时执行WebSocket连接
-    
+
   },
   methods: {
     //初始化首页数据

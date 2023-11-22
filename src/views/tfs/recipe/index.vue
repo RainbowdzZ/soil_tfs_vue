@@ -68,8 +68,7 @@
     <!--    引入订单列表-->
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="订单号" align="center" prop="id" />
-      <el-table-column label="用户号" align="center" prop="wxUserId" />
+
       <el-table-column label="土壤号" align="center" prop="soilNumber" />
       <el-table-column label="配方号" align="center" prop="recipeId" v-if="false" />
       <el-table-column label="订单创建时间" align="center" prop="orderTime" width="180">
@@ -111,7 +110,7 @@
         <el-table-column label="检测指标名称" prop="checkupIndicatorName"></el-table-column>
         <el-table-column label="检测值" prop="checkupValue"></el-table-column>
         <el-table-column label="单位" prop="unit"></el-table-column>
-      </el-table>      
+      </el-table>
       <el-descriptions title="订单详情">
         <!-- 图片 -->
         <el-descriptions-item label="采土图片">
@@ -126,18 +125,21 @@
         <el-descriptions-item label="种植种类">{{ plantCategory }}</el-descriptions-item>
       </el-descriptions>
 
+
+      <el-descriptions title="填写配方"></el-descriptions>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="订单号" prop="orderId">
-          <el-input v-model="form.orderId" placeholder="请输入订单号" />
+          <span style="margin-left: 10px;">{{ form.orderId }}</span>
         </el-form-item>
         <el-form-item label="施肥建议" prop="fertilizationAdvice">
-          <el-input v-model="form.fertilizationAdvice" placeholder="请输入施肥建议" />
+          <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.fertilizationAdvice" placeholder="请输入施肥建议" />
         </el-form-item>
         <el-form-item label="种植建议" prop="plantingAdvice">
-          <el-input v-model="form.plantingAdvice" placeholder="请输入种植建议" />
+          <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.plantingAdvice" placeholder="请输入种植建议" />
         </el-form-item>
         <el-form-item label="总结" prop="summary">
-          <el-input v-model="form.summary" placeholder="请输入总结" />
+          <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.summary" placeholder="请输入总结" />
+
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -306,7 +308,9 @@ export default {
      */
     getButtonText(orderStatus) {
       if (orderStatus === '3') {
-        return '提交配方'; // 待配方状态对应的按钮文字
+
+        return '填写配方单'; // 待配方状态对应的按钮文字
+
       } else if (orderStatus === '4') {
         return '查看配方'; // 已完成状态对应的按钮文字
       }
@@ -536,7 +540,7 @@ export default {
           confirmButtonText: "查看",
           cancelButtonText: "忽略",
           type: "info",
-        }); 
+        });
       };
 
       // 连接关闭的回调方法

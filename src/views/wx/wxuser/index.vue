@@ -9,6 +9,14 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item> -->
+        <el-form-item label="用户号" prop="phone">
+          <el-input
+            v-model="queryParams.id"
+            placeholder="请输入用户号"
+            clearable
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
         <el-form-item label="微信名称" prop="nickname">
           <el-input
             v-model="queryParams.nickname"
@@ -16,15 +24,7 @@
             clearable
             @keyup.enter.native="handleQuery"
           />
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="queryParams.phone"
-            placeholder="请输入手机号"
-            clearable
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
+        </el-form-item>        
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -41,18 +41,7 @@
             @click="handleAdd"
             v-hasPermi="['wx:wxuser:add']"
           >新增</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-            v-hasPermi="['wx:wxuser:edit']"
-          >修改</el-button>
-        </el-col>
+        </el-col>        
         <el-col :span="1.5">
           <el-button
             type="danger"
@@ -79,14 +68,8 @@
   
       <el-table v-loading="loading" :data="wxuserList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-<<<<<<< HEAD
-        <el-table-column label="主键" align="center" prop="id" />
-=======
->>>>>>> 73c5fe40a7ddd318c250d858a26defc11dc547cb
-        <!-- <el-table-column label="OpenID" align="center" prop="openid" width="200px"/> -->
+        <el-table-column label="用户号" align="center" prop="id" />
         <el-table-column label="微信名称" align="center" prop="nickname" />
-        <el-table-column label="手机号" align="center" prop="phone" />
-        <el-table-column label="性别" align="center" prop="sex" />
         <el-table-column label="头像" align="center" prop="avatar" width="100">
           <template slot-scope="scope">
             <image-preview :src="scope.row.avatar" :width="50" :height="50"/>
@@ -178,6 +161,7 @@
           phone: null,
           sex: null,
           avatar: null,
+          id:null,
         },
         // 表单参数
         form: {},

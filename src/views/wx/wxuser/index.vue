@@ -30,7 +30,7 @@
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
-  
+
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button
@@ -76,13 +76,10 @@
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
-  
+
       <el-table v-loading="loading" :data="wxuserList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-<<<<<<< HEAD
-        <el-table-column label="主键" align="center" prop="id" />
-=======
->>>>>>> 73c5fe40a7ddd318c250d858a26defc11dc547cb
+        <el-table-column label="用户号" align="center" prop="id" />
         <!-- <el-table-column label="OpenID" align="center" prop="openid" width="200px"/> -->
         <el-table-column label="微信名称" align="center" prop="nickname" />
         <el-table-column label="手机号" align="center" prop="phone" />
@@ -104,6 +101,13 @@
             <el-button
               size="mini"
               type="text"
+              icon="el-icon-edit"
+              @click="handleIssueCoupons(scope.row)"
+              v-hasPermi="['wx:coupon:issue']"
+            >发放优惠券</el-button>
+            <el-button
+              size="mini"
+              type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['wx:wxuser:remove']"
@@ -111,7 +115,7 @@
           </template>
         </el-table-column>
       </el-table>
-      
+
       <pagination
         v-show="total>0"
         :total="total"
@@ -119,7 +123,7 @@
         :limit.sync="queryParams.pageSize"
         @pagination="getList"
       />
-  
+
       <!-- 添加或修改微信用户对话框 -->
       <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -141,12 +145,29 @@
           <el-button @click="cancel">取 消</el-button>
         </div>
       </el-dialog>
+
+      <!-- 发放优惠券对话框 -->
+      <el-dialog :title="'发放优惠券给用户 ' + issueCouponForm.userId" :visible.sync="issueCouponDialogVisible" width="500px" append-to-body>
+        <el-form ref="issueCouponForm":model="issueCouponForm" :rules="issueCouponRules" label-width="80px">
+          <el-form-item label="选择优惠券" prop="couponId">
+            <el-select v-model="issueCouponForm.couponId" placeholder="请选择优惠券">
+              <el-option v-for="coupon in couponList" :key="coupon.id" :label="coupon.name" :value="coupon.id" />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="issueCoupons">确定发放</el-button>
+          <el-button @click="cancelIssueCoupons">取消</el-button>
+        </div>
+      </el-dialog>
     </div>
   </template>
-  
+
   <script>
   import { listWxuser, getWxuser, delWxuser, addWxuser, updateWxuser } from "@/api/wx/wxuser";
-  
+  import {issuesListCoupon} from "@/api/wx/coupon";
+  import { addUsercoupon } from '@/api/wx/usercoupon'
+
   export default {
     name: "Wxuser",
     data() {
@@ -183,7 +204,18 @@
         form: {},
         // 表单校验
         rules: {
-        }
+        },
+        /** 发放优惠券表单 */
+        issueCouponDialogVisible: false,
+        issueCouponForm: {
+          userId: null, // 用户ID，通过点击发放优惠券按钮获取
+          couponId: null ,// 选择的优惠券ID
+          name:null
+        },
+        issueCouponRules: {
+          couponId: [{ required: true, message: "请选择优惠券", trigger: "change" }]
+        },
+        couponList: [] // 添加用于存储可用优惠券列表的属性
       };
     },
     created() {
@@ -219,6 +251,16 @@
           updateTime: null
         };
         this.resetForm("form");
+      },
+      // 表单重置
+      reset2() {
+        this.issueCouponForm = {
+          couponId: null ,
+          name:null,
+          termBeginTime: null,
+          termEndTime: null,
+        };
+        this.resetForm("issueCouponForm");
       },
       /** 搜索按钮操作 */
       handleQuery() {
@@ -287,6 +329,42 @@
         this.download('wx/wxuser/export', {
           ...this.queryParams
         }, `wxuser_${new Date().getTime()}.xlsx`)
+      },
+
+      /** 发放优惠券操作按钮*/
+      handleIssueCoupons(row) {
+        // this.reset2();
+        // 打开发放优惠券对话框，设置用户ID
+
+        this.issueCouponForm.userId = row.id;
+        // 获取优惠券列表
+        issuesListCoupon().then(response => {
+          // 提取需要的信息（id 和 name）并存储到 couponList
+          this.couponList = response.rows
+
+          this.issueCouponDialogVisible = true;
+        });
+
+
+      },
+      /** 发放优惠券*/
+      issueCoupons() {
+        this.$refs["issueCouponForm"].validate(valid => {
+          if (valid) {
+            // 发放优惠券的逻辑，使用this.issueCouponForm.userId和this.issueCouponForm.couponId
+            // 调用API发放优惠券
+            addUsercoupon(this.issueCouponForm).then(response => {
+              this.$modal.msgSuccess("发放优惠券成功");
+              this.issueCouponDialogVisible = false;
+            });
+          }
+        });
+      },
+      /** 取消优惠券发放*/
+      cancelIssueCoupons() {
+        // 取消发放优惠券，关闭对话框
+        this.issueCouponDialogVisible = false;
+        this.reset2();
       }
     }
   };

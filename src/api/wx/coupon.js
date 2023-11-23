@@ -9,6 +9,14 @@ export function listCoupon(query) {
   })
 }
 
+// 查询可发放的优惠券列表
+export function issuesListCoupon() {
+  return request({
+    url: '/wx/coupon/issuesList',
+    method: 'get',
+  })
+}
+
 // 查询优惠券详细
 export function getCoupon(id) {
   return request({
@@ -48,7 +56,7 @@ export function sendCoupon(id) {
     url: '/wx/coupon/'+ id+'/issue',
     method: 'put',
   })
-  
+
 }
 //暂停发放优惠劵
 export function stopCoupon(id) {
@@ -56,6 +64,6 @@ export function stopCoupon(id) {
     url: '/wx/coupon/'+ id+'/stop',
     method: 'put',
   })
-  
+
 }
 

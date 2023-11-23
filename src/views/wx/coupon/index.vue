@@ -36,7 +36,7 @@
           value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择结束发放时间">
         </el-date-picker>
-      </el-form-item> 
+      </el-form-item>
       <el-form-item label="有效期天数" prop="termDays">
         <el-input
           v-model="queryParams.termDays"
@@ -60,14 +60,6 @@
           value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择有效期结束时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="创建人" prop="creater">
-        <el-input
-          v-model="queryParams.creater"
-          placeholder="请输入创建人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item label="活动状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择活动状态" clearable>
@@ -140,7 +132,7 @@
           <span>{{ scope.row.type === 1 ? '普通券' : '其他类型' }}</span>
         </template>
       </el-table-column>
-      
+
       <el-table-column label="折扣类型" align="center" prop="discountType">
         <template slot-scope="scope">
           <span v-if="scope.row.discountType === 1">满减</span>
@@ -193,8 +185,6 @@
       <el-table-column label="已发行数量" align="center" prop="issueNum" width="100px"/>
       <el-table-column label="已使用数量" align="center" prop="usedNum" width="100px"/>
       <el-table-column label="限领数量" align="center" prop="userLimit" />
-      <el-table-column label="创建人" align="center" prop="creater" />
-      <el-table-column label="更新人" align="center" prop="updater" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width"  width="120px">
         <template slot-scope="scope">
           <el-button
@@ -228,7 +218,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -303,18 +293,15 @@
         <el-form-item label="限领数量" prop="userLimit">
           <el-input v-model="form.userLimit" placeholder="请输入限领数量" />
         </el-form-item>
-        <el-form-item label="创建人" prop="creater">
-          <el-input v-model="form.creater" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="更新人" prop="updater">
-          <el-input v-model="form.updater" placeholder="请输入更新人" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+
+
   </div>
 </template>
 
@@ -490,7 +477,7 @@ export default {
         this.getList();
         this.$modal.msgSuccess("发放成功");
       }).catch(() => {});
-     
+
     },
     /** 发放按钮操作 */
     handleStop(row) {
@@ -502,7 +489,7 @@ export default {
         this.getList();
         this.$modal.msgSuccess("暂停成功");
       }).catch(() => {});
-     
+
     },
     /** 提交按钮 */
     submitForm() {
@@ -540,6 +527,7 @@ export default {
         ...this.queryParams
       }, `coupon_${new Date().getTime()}.xlsx`)
     }
+
   }
 };
 </script>

@@ -57,18 +57,7 @@
           @click="handleAdd"
           v-hasPermi="['wx:activity:add']"
         >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['wx:activity:edit']"
-        >修改</el-button>
-      </el-col>
+      </el-col>      
       <el-col :span="1.5">
         <el-button
           type="danger"

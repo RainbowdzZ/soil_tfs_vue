@@ -138,7 +138,6 @@ export default {
       if (this.role === "admin") {
         this.init();
         this.connectWebSocket();
-
       }
     });
 
@@ -302,7 +301,7 @@ export default {
       if ("WebSocket" in window) {
         // 改成你的地址
         this.socket = new WebSocket(
-          `ws://localhost:8080/imserver/app/${userId}`
+          `ws://8.134.107.195:8080/imserver/app/${userId}`
         );
       } else {
         alert("当前浏览器 Not support websocket");

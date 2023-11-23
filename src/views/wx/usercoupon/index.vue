@@ -1,26 +1,26 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户id" prop="userId">
+      <el-form-item label="用户号" prop="userId">
         <el-input
           v-model="queryParams.userId"
-          placeholder="请输入用户id"
+          placeholder="请输入用户号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="优惠券id" prop="couponId">
+      <el-form-item label="优惠券号" prop="couponId">
         <el-input
           v-model="queryParams.couponId"
-          placeholder="请输入优惠券id"
+          placeholder="请输入优惠券号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="订单id" prop="orderId">
+      <el-form-item label="订单号" prop="orderId">
         <el-input
           v-model="queryParams.orderId"
-          placeholder="请输入订单id"
+          placeholder="请输入订单号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -54,17 +54,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['wx:usercoupon:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="danger"
           plain
           icon="el-icon-delete"
@@ -90,29 +79,29 @@
     <el-table v-loading="loading" :data="usercouponList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="id" /> -->
-      <el-table-column label="用户id" align="center" prop="userId" />
-      <el-table-column label="优惠券id" align="center" prop="couponId" />
-      <el-table-column label="有效期开始时间" align="center" prop="termBeginTime" width="180">
+      <el-table-column label="用户号" align="center" prop="userId" />
+      <el-table-column label="优惠券号" align="center" prop="couponId" />
+      <el-table-column label="有效期开始时间" align="center" prop="termBeginTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.termBeginTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="有效期结束时间" align="center" prop="termEndTime" width="180">
+      <el-table-column label="有效期结束时间" align="center" prop="termEndTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.termEndTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="使用时间" align="center" prop="usedTime" width="180">
+      <el-table-column label="使用时间" align="center" prop="usedTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.usedTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="优惠券状态" align="center" prop="status" width="100">
+      <el-table-column label="优惠券状态" align="center" prop="status" >
         <template slot-scope="scope">
           <dict-tag :options="dict.type.wx_user_conpon_status" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="订单id" align="center" prop="orderId" />
+      <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -144,11 +133,11 @@
     <!-- 添加或修改优惠券历史对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="用户id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户id" />
+        <el-form-item label="用户号" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户号" />
         </el-form-item>
-        <el-form-item label="优惠券id" prop="couponId">
-          <el-input v-model="form.couponId" placeholder="请输入优惠券id" />
+        <el-form-item label="优惠券号" prop="couponId">
+          <el-input v-model="form.couponId" placeholder="请输入优惠券号" />
         </el-form-item>
         <el-form-item label="有效期开始时间" prop="termBeginTime">
           <el-date-picker clearable
@@ -174,8 +163,8 @@
             placeholder="请选择使用时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="订单id" prop="orderId">
-          <el-input v-model="form.orderId" placeholder="请输入订单id" />
+        <el-form-item label="订单号" prop="orderId">
+          <el-input v-model="form.orderId" placeholder="请输入订单号" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

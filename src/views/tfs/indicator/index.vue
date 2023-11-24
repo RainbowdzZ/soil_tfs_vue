@@ -145,20 +145,12 @@
 
     <!-- 添加或修改检测指标管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width=auto>
         <el-form-item label="指标名称" prop="indicatorName">
           <el-input v-model="form.indicatorName" placeholder="请输入指标名称" />
         </el-form-item>
         <el-form-item label="单位" prop="unit">
           <el-input v-model="form.unit" placeholder="请输入单位" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createdAt">
-          <el-date-picker clearable
-                          v-model="form.createdAt"
-                          type="datetime"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          placeholder="请选择创建时间">
-          </el-date-picker>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -169,34 +161,34 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="1级最小值" prop="level1Min">
+        <el-form-item label="1级标准最小值" prop="level1Min">
           <el-input v-model="form.level1Min" placeholder="请输入1级最小值" />
         </el-form-item>
-        <el-form-item label="1级最大值" prop="level1Max">
+        <el-form-item label="1级标准最大值" prop="level1Max">
           <el-input v-model="form.level1Max" placeholder="请输入1级最大值" />
         </el-form-item>
-        <el-form-item label="2级最小值" prop="level2Min">
+        <el-form-item label="2级标准最小值" prop="level2Min">
           <el-input v-model="form.level2Min" placeholder="请输入2级最小值" />
         </el-form-item>
-        <el-form-item label="2级最大值" prop="level2Max">
+        <el-form-item label="2级标准最大值" prop="level2Max">
           <el-input v-model="form.level2Max" placeholder="请输入2级最大值" />
         </el-form-item>
-        <el-form-item label="3级最小值" prop="level3Min">
+        <el-form-item label="3级标准最小值" prop="level3Min">
           <el-input v-model="form.level3Min" placeholder="请输入3级最小值" />
         </el-form-item>
-        <el-form-item label="3级最大值" prop="level3Max">
+        <el-form-item label="3级标准最大值" prop="level3Max">
           <el-input v-model="form.level3Max" placeholder="请输入3级最大值" />
         </el-form-item>
-        <el-form-item label="4级最小值" prop="level4Min">
+        <el-form-item label="4级标准最小值" prop="level4Min">
           <el-input v-model="form.level4Min" placeholder="请输入4级最小值" />
         </el-form-item>
-        <el-form-item label="4级最大值" prop="level4Max">
+        <el-form-item label="4级标准最大值" prop="level4Max">
           <el-input v-model="form.level4Max" placeholder="请输入4级最大值" />
         </el-form-item>
-        <el-form-item label="5级最小值" prop="level5Min">
+        <el-form-item label="5级标准最小值" prop="level5Min">
           <el-input v-model="form.level5Min" placeholder="请输入5级最小值" />
         </el-form-item>
-        <el-form-item label="5级最大值" prop="level5Max">
+        <el-form-item label="5级标准最大值" prop="level5Max">
           <el-input v-model="form.level5Max" placeholder="请输入5级最大值" />
         </el-form-item>
       </el-form>

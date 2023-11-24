@@ -52,6 +52,7 @@
           />
         </el-select>
       </el-form-item>
+      
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
         >搜索</el-button
@@ -218,20 +219,6 @@ import { addCheckup } from '@/api/tfs/checkup';
 export default {
   name: 'Order',
   dicts: ['tfs_order_status'],
-  //数据过滤
-  // computed: {
-  //   filteredIndicators: {
-  //     get() {
-  //       return this.rows
-  //         .filter(item => item.status === "1")
-  //         .map(item => ({ name: item.indicatorName, unit: item.unit }));
-  //     },
-  //     set(value) {
-  //       // 这里可以根据需要添加设置操作
-  //     }
-  //   }
-  // },
-
   data() {
     return {
       // 遮罩层
@@ -255,7 +242,9 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10,        
+        orderByColumn:"order_time",
+        isAsc:"desc",
         id: null,
         wxUserId: null,
         soilNumber: null,

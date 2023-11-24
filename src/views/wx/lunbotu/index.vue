@@ -67,15 +67,7 @@
           <image-preview :src="scope.row.imgUrl" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="页面标题" align="center" prop="name" />
-      <el-table-column label="内容类型" align="center" prop="contentType" >
-        <template slot-scope="scope">
-          <span v-if="scope.row.contentType === 1">无</span>
-          <span v-else-if="scope.row.contentType === 2">富文本</span>
-          <span v-else>链接</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="内容" align="center" prop="content" />
+      <el-table-column label="页面标题" align="center" prop="name" />      
       <el-table-column label="状态" align="center" prop="state">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.wx_carousel_status" :value="scope.row.state"/>
@@ -128,15 +120,6 @@
         </el-form-item>
         <el-form-item label="页面标题" prop="name">
           <el-input v-model="form.name" placeholder="请输入页面标题" />
-        </el-form-item>
-        <el-form-item label="内容">
-          <editor v-model="form.content" :min-height="192"/>
-        </el-form-item>
-        <el-form-item label="内容类型" prop="contentType">
-          <!-- <el-input v-model="form.contentType" placeholder="请输入内容类型" /> -->
-          <el-radio  v-model="form.contentType" label="1">无</el-radio>
-          <el-radio  v-model="form.contentType" label="2">富文本</el-radio>
-          <el-radio  v-model="form.contentType" label="3">链接</el-radio>
         </el-form-item>
         <el-form-item label="状态" prop="state">
           <!-- <el-input v-model="form.state" placeholder="请输入状态" /> -->

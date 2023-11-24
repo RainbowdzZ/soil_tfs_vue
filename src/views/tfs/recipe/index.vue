@@ -223,6 +223,8 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        orderByColumn:"order_time",
+        isAsc:"desc",
         id: null,
         wxUserId: null,
         soilNumber: null,

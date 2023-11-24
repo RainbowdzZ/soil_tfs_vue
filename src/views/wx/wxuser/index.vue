@@ -135,7 +135,7 @@
       <!-- 发放优惠券对话框 -->
       <el-dialog :title="'发放优惠券给用户 ' + issueCouponForm.userId" :visible.sync="issueCouponDialogVisible" width="500px" append-to-body>
         <el-form ref="issueCouponForm":model="issueCouponForm" :rules="issueCouponRules" label-width="80px">
-          <el-form-item label="选择优惠券" prop="couponId">
+          <el-form-item label="选择优惠券" prop="couponId" label-width="100px">
             <el-select v-model="issueCouponForm.couponId" placeholder="请选择优惠券">
               <el-option v-for="coupon in couponList" :key="coupon.id" :label="coupon.name" :value="coupon.id" />
             </el-select>

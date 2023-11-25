@@ -231,6 +231,7 @@
             icon="el-icon-bell"
             @click="handleIssue(scope.row)"
             v-hasPermi="['wx:coupon:issue']"
+            :disabled="scope.row.status !== 1 && scope.row.status !== 5"
             >发放</el-button
           >
           <el-button
@@ -239,6 +240,7 @@
             icon="el-icon-warning"
             @click="handleStop(scope.row)"
             v-hasPermi="['wx:coupon:stop']"
+            :disabled="scope.row.status !== 1 && scope.row.status !== 2"
             >暂停</el-button
           >
           <el-button

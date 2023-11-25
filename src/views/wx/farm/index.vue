@@ -93,8 +93,6 @@
       <el-table-column label="默认地址" align="center" prop="isDefault" />
       <el-table-column label="种植种类" align="center" prop="plantCategory" />
       <el-table-column label="种植规模" align="center" prop="scale" />
-      <el-table-column label="创建人" align="center" prop="creater" />
-      <el-table-column label="更新人" align="center" prop="updater" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width"  width="110px">
         <template slot-scope="scope">
           <el-button

@@ -108,7 +108,7 @@
           <image-preview :src="scope.row.imageUrl" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -272,7 +272,7 @@ export default {
       if (status == 0) {
         return '发布'; // 待配方状态对应的按钮文字
       } else if (status == 1) {
-        return '停止发布'; // 已完成状态对应的按钮文字
+        return '暂停发布'; // 已完成状态对应的按钮文字
       }
       // 其他状态的按钮文字
       return '';

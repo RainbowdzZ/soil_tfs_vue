@@ -120,7 +120,7 @@
             :preview-src-list="[soilUrl]"
           ></el-image>
         </el-descriptions-item>
-        <el-descriptions-item label="地址">{{ address }}</el-descriptions-item>
+        <el-descriptions-item label="地址"><span style="margin-right: 50px;">{{ address }}</span></el-descriptions-item>
         <el-descriptions-item label="种植规模">{{ scale }} 亩</el-descriptions-item>
         <el-descriptions-item label="种植种类">{{ plantCategory }}</el-descriptions-item>
       </el-descriptions>
@@ -284,7 +284,7 @@ export default {
     prependServerAddress(relativeUrl) {
       // 在这个方法中加入服务器地址
       if (relativeUrl) {
-        return `http://192.168.43.229:8080${relativeUrl}`;
+        return `http://8.134.107.195:8080${relativeUrl}`;
       }
       return ''; // 或者其他默认值
     },
@@ -513,7 +513,7 @@ export default {
       if ("WebSocket" in window) {
         // 改成你的地址
         this.socket = new WebSocket(
-          `ws://localhost:8080/imserver/app/${userId}`
+          `ws://8.134.107.195:8080/imserver/app/${userId}`
         );
       } else {
         alert("当前浏览器 Not support websocket");

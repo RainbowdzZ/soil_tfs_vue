@@ -89,6 +89,7 @@
             icon="el-icon-bell"
             @click="handlePublic(scope.row)"
             v-hasPermi="['wx:lunbotu:public']"
+            :disabled="scope.row.state === 1"
           >发布</el-button>
           <el-button
             size="mini"
@@ -121,9 +122,8 @@
         <el-form-item label="页面标题" prop="name">
           <el-input v-model="form.name" placeholder="请输入页面标题" />
         </el-form-item>
-        <el-form-item label="状态" prop="state">
-          <!-- <el-input v-model="form.state" placeholder="请输入状态" /> -->
-          <el-select v-model="form.state" placeholder="请选择状态" clearable>
+        <el-form-item label="状态">
+          <el-select v-model="form.state" placeholder="请选择">
           <el-option
             v-for="dict in dict.type.wx_carousel_status"
             :key="dict.value"
